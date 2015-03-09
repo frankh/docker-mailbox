@@ -34,10 +34,14 @@ RUN mv composer.phar /usr/local/bin/composer
 # Prepare Nginx
 RUN rm /etc/nginx/sites-enabled/default
 ADD nginx/vimbadmin /etc/nginx/sites-available/vimbadmin
+ADD nginx/roundcube /etc/nginx/sites-available/roundcube
 RUN ln -sf /etc/nginx/sites-available/vimbadmin /etc/nginx/sites-enabled/vimbadmin
+RUN ln -sf /etc/nginx/sites-available/roundcube /etc/nginx/sites-enabled/roundcube
 RUN mkdir /var/www
 ADD nginx/correct-vimbadmin-hostname.sh /tmp/correct-vimbadmin-hostname.sh
 RUN /bin/sh /tmp/correct-vimbadmin-hostname.sh
+ADD nginx/correct-roundcube-hostname.sh /tmp/correct-roundcube-hostname.sh
+RUN /bin/sh /tmp/correct-roundcube-hostname.sh
 
 # Configure ViMbAdmin
 RUN mkdir /var/www/vimbadmin
@@ -124,6 +128,11 @@ ADD dovecot/adjust-dovecot-configuration-files.sh /tmp/adjust-dovecot-configurat
 ADD dovecot/create-ssl-certificate.sh /tmp/create-ssl-certificate.sh
 RUN /bin/sh /tmp/adjust-dovecot-configuration-files.sh
 RUN /bin/sh /tmp/create-ssl-certificate.sh
+
+# Configure RoundCube
+ADD mysql/create-roundcube-database.sh /tmp/create-roundcube-database.sh
+RUN /bin/sh /tmp/create-roundcube-database.sh
+
 
 # Expose MySQL, postfix, Dovecot and Nginx
 EXPOSE 3306 25 80 143 993 995

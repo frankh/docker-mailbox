@@ -130,6 +130,8 @@ RUN /bin/sh /tmp/adjust-dovecot-configuration-files.sh
 RUN /bin/sh /tmp/create-ssl-certificate.sh
 
 # Configure RoundCube
+RUN apt-get install -y roundcube
+RUN ls -sf /usr/share/roundcube /var/www/roundcube
 ADD mysql/create-roundcube-database.sh /tmp/create-roundcube-database.sh
 RUN /bin/sh /tmp/create-roundcube-database.sh
 
